@@ -1,9 +1,6 @@
 'use strict';
 
 const {app, BrowserWindow} = require('electron');
-const signinPopup = require('./signinPopup');
-const fetchAccessTokens = require('./fetchAccessTokens');
-const keytar = require('keytar');
 const config = require('./config');
 const log = require('./log');
 
