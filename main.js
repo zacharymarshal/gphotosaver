@@ -20,31 +20,6 @@ let win;
 
 app.on('ready', () => {
   createWindow();
-
-  // const SERVICE = 'com.theweekendprogrammer.gphotosaver';
-  // keytar.findCredentials(SERVICE).then(creds => {
-  //   console.log(creds);
-  // });
-  // signinPopup().then(code => {
-  //   console.log(code);
-  //   return fetchAccessTokens(code).then(tokens => {
-  //     keytar.setPassword(
-  //       SERVICE,
-  //       'refresh_token',
-  //       tokens.refresh_token,
-  //     );
-  //     keytar.setPassword(
-  //       SERVICE,
-  //       'access_token',
-  //       tokens.access_token,
-  //     );
-  //   });
-  // }).then(() => {
-  //   keytar.getPassword(SERVICE, 'refresh_token')
-  //     .then(token => {
-  //       console.log(token);
-  //     });
-  // });
 });
 
 app.on('window-all-closed', () => {
