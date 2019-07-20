@@ -1,0 +1,15 @@
+{
+  "name": "gphotosaver",
+  "version": "0.1.0",
+  "description": "Save Google Photos to your desktop to be used with your screensaver",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "devDependencies": {
+    "electron": "^5.0.7"
+  },
+  "dependencies": {}
+}
