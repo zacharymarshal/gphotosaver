@@ -34,7 +34,7 @@ const createAuthWindow = () => {
 module.exports = function signinPopup() {
   createAuthWindow();
   return new Promise((resolve, reject) => {
-    const port = 16888;
+    const port = config.get('auth.port');
     let handler = req => {
       const query = url.parse(req.url).query;
       const params = querystring.parse(query);
