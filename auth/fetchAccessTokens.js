@@ -11,7 +11,6 @@ module.exports = options => {
   const redirectUri = options.redirectUri;
 
   return new Promise((resolve, reject) => {
-
     const url = 'https://www.googleapis.com/oauth2/v4/token';
     const params = qs.stringify({
       code,
@@ -26,7 +25,7 @@ module.exports = options => {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     }).then(res => {
-      this.log.debug('auth/tokens - response %j', res.data);
+      log.debug('auth/tokens - response %j', res.data);
       resolve(res.data);
     }).catch(err => reject(err));
   });
