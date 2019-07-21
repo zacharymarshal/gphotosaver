@@ -37,6 +37,8 @@ module.exports = class Auth {
           this.fetchToken()
             .then(token => resolve(token))
             .catch(err => reject(err));
+        } else {
+          resolve(accessToken);
         }
       });
     });
