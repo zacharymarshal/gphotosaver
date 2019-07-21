@@ -13,10 +13,10 @@
 
   <script type="application/javascript">
     const {remote} = require('electron');
-    const googleSignIn = remote.require('./googleSignIn');
+    const {auth} = remote.require('./app');
     const el = document.querySelector('.google-sign-in');
     el.addEventListener('click', e => {
-      googleSignIn()
+      auth.getToken()
     });
   </script>
 </body>

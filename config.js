@@ -2,18 +2,12 @@
 
 const config = require('electron-json-config');
 
-exports.init = () => {
-  if (config.has('auth')) {
+exports.init = (version, upgradeCallback) => {
+  if (version === config.get('__version')) {
     return;
   }
-  config.setBulk({
-    'keychain.service': 'com.theweekendprogrammer.gphotosaver',
-    'auth.client_id': '',
-    'auth.client_secret': '',
-    'auth.port': '16888',
-    'log.level': 'silly',
-    'log.maxFileSize': '1048576',
-  });
+  config.set('__version', version);
+  upgradeCallback(version);
 };
 
 exports.get = (key, defaultValue) => {
@@ -22,4 +16,16 @@ exports.get = (key, defaultValue) => {
 
 exports.file = () => {
   return config.file();
+};
+
+exports.setBulk = items => {
+  return config.setBulk(items);
+};
+
+exports.has = key => {
+  return config.has(key);
+};
+
+exports.set = (key, value) => {
+  return config.set(key, value);
 };

@@ -2,16 +2,11 @@
 
 const {app, BrowserWindow} = require('electron');
 const config = require('./config');
-const log = require('./log');
+const {log} = require('./app');
 
 let win;
 
 app.on('ready', () => {
-  config.init();
-  log.init({
-    level: config.get('log.level'),
-    maxFileSize: config.get('log.maxFileSize'),
-  });
   log.debug('app starting up');
   log.debug('config file "%s"', config.file());
   log.debug('log file "%s"', log.file());
