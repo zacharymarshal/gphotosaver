@@ -5,18 +5,56 @@
   <title>Hello World!</title>
 </head>
 <body>
-  <a href="#" class="google-sign-in">Sign in with Google</a>
   <h1>Hello World!</h1>
   We are using node <script>document.write(process.versions.node)</script>,
   Chrome <script>document.write(process.versions.chrome)</script>,
   and Electron <script>document.write(process.versions.electron)</script>.
 
+  <ul>
+    <li><a href="#" class="google-sign-in">Sign in with Google</a></li>
+    <li><a href="#" class="search">Search photos</a></li>
+  </ul>
+
+  <div id="photos"></div>
+
   <script type="application/javascript">
     const {remote} = require('electron');
-    const {auth} = remote.require('./app');
+    const {auth, log} = remote.require('./app');
+    const apiSearch = remote.require('./apiSearch');
+
     const el = document.querySelector('.google-sign-in');
     el.addEventListener('click', e => {
       auth.getToken()
+    });
+    const searchEl = document.querySelector('.search');
+    searchEl.addEventListener('click', e => {
+      const filters = {
+        contentFilter: {
+          excludedContentCategories: [
+            'WHITEBOARDS',
+            'SCREENSHOTS',
+            'RECEIPTS',
+          ]
+        },
+        mediaTypeFilter: {mediaTypes: ['PHOTO']}
+      };
+      const params = {
+        filters,
+      };
+      auth.getToken().then(authToken => {
+        apiSearch({
+          log,
+          authToken,
+          params,
+        }).then(photos => {
+          const container = document.getElementById('photos');
+          photos.forEach(photo => {
+            const img = document.createElement("img");
+            img.src = photo.baseUrl;
+            container.appendChild(img);
+          });
+        });
+      });
     });
   </script>
 </body>
