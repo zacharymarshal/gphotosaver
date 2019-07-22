@@ -5,7 +5,13 @@ const popup = require('./popup');
 const qs = require('querystring');
 
 module.exports = class Auth {
-  init(options) {
+  log;
+  keychain;
+  clientId;
+  clientSecret;
+  port;
+  scopes;
+  constructor(options) {
     this.log = options.log;
     this.keychain = options.keychain;
     this.clientId = options.clientId;

@@ -1,15 +1,14 @@
 'use strict';
 
 const {app, BrowserWindow} = require('electron');
-const config = require('./config');
-const {log} = require('./app');
+const {log, config} = require('./app');
 
 let win;
 
 app.on('ready', () => {
   log.debug('app starting up');
-  log.debug('config file "%s"', config.file());
-  log.debug('log file "%s"', log.file());
+  log.debug('config file "%s"', config.getConfigPath());
+  log.debug('log file "%s"', log.getLogPath());
 
   createWindow();
 });
