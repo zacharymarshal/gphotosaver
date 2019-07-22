@@ -39,7 +39,7 @@ module.exports = class Auth {
   lookupAccessToken() {
     if (this.tokenManager.accessTokenHasExpired()) {
       this.log.info('auth.lookupAccessToken - refreshing token...');
-      this.tokenManager.lookupRefreshToken().then(refreshToken => {
+      return this.tokenManager.lookupRefreshToken().then(refreshToken => {
         return refreshAccessToken({
           log: this.log,
           refreshToken: refreshToken,
