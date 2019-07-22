@@ -36,44 +36,35 @@ module.exports = class Auth {
   }
 
   getToken() {
-    return new Promise((resolve, reject) => {
-      this.keychain.getAccessToken().then(accessToken => {
+    return this.keychain.getAccessToken()
+      .then(accessToken => {
         this.log.debug('auth.getToken - access token %s', accessToken);
-        if (!accessToken) {
-          this.fetchToken()
-            .then(token => resolve(token))
-            .catch(err => reject(err));
-        } else {
-          resolve(accessToken);
-        }
+        return accessToken || this.fetchToken();
       });
-    });
   }
 
   fetchToken() {
     this.log.info('auth - start process to get oauth token...');
-    return new Promise((resolve, reject) => {
-      this.log.info('auth - getting google auth code...');
-      popup({
-        loginUrl: this.getLoginUrl(),
-        port: this.port,
+    this.log.info('auth - getting google auth code...');
+    popup({
+      loginUrl: this.getLoginUrl(),
+      port: this.port,
+      log: this.log,
+    }).then(code => {
+      this.log.info('auth - received google auth code');
+      return code;
+    }).then(code => {
+      this.log.info('auth - getting google auth tokens...');
+      return fetchAccessTokens({
         log: this.log,
-      }).then(code => {
-        this.log.info('auth - received google auth code');
-        return code;
-      }).then(code => {
-        this.log.info('auth - getting google auth tokens...');
-        fetchAccessTokens({
-          log: this.log,
-          code: code,
-          clientId: this.clientId,
-          clientSecret: this.clientSecret,
-          redirectUri: this.getRedirectUri(),
-        }).then(tokens => {
-          this.keychain.setTokens(tokens.access_token, tokens.refresh_token);
-          resolve(tokens.access_token);
-        }).catch(err => reject(err));
-      }).catch(err => reject(err));
+        code: code,
+        clientId: this.clientId,
+        clientSecret: this.clientSecret,
+        redirectUri: this.getRedirectUri(),
+      });
+    }).then(tokens => {
+      this.keychain.setTokens(tokens.access_token, tokens.refresh_token);
+      return tokens.access_token;
     });
   }
 };
