@@ -1,19 +1,20 @@
 'use strict';
 
 const fetchAccessTokens = require('./fetchAccessTokens');
+const refreshAccessToken = require('./refreshAccessToken');
 const popup = require('./popup');
 const qs = require('querystring');
 
 module.exports = class Auth {
   log;
-  keychain;
+  tokenManager;
   clientId;
   clientSecret;
   port;
   scopes;
   constructor(options) {
     this.log = options.log;
-    this.keychain = options.keychain;
+    this.tokenManager = options.tokenManager;
     this.clientId = options.clientId;
     this.clientSecret = options.clientSecret;
     this.port = options.port;
@@ -35,10 +36,24 @@ module.exports = class Auth {
     return `http://localhost:${this.port}`;
   }
 
-  getToken() {
-    return this.keychain.getAccessToken()
+  lookupAccessToken() {
+    if (this.tokenManager.accessTokenHasExpired()) {
+      this.log.info('auth.lookupAccessToken - refreshing token...');
+      this.tokenManager.lookupRefreshToken().then(refreshToken => {
+        return refreshAccessToken({
+          log: this.log,
+          refreshToken: refreshToken,
+          clientId: this.clientId,
+          clientSecret: this.clientSecret,
+        });
+      }).then(({accessToken, refreshToken, expiresIn}) => {
+        this.tokenManager.persistTokens({accessToken, refreshToken, expiresIn});
+        return accessToken;
+      });
+    }
+    return this.tokenManager.lookupAccessToken()
       .then(accessToken => {
-        this.log.debug('auth.getToken - access token %s', accessToken);
+        this.log.debug('auth.lookupAccessToken - access token %s', accessToken);
         return accessToken || this.fetchToken();
       });
   }
@@ -62,9 +77,9 @@ module.exports = class Auth {
         clientSecret: this.clientSecret,
         redirectUri: this.getRedirectUri(),
       });
-    }).then(tokens => {
-      this.keychain.setTokens(tokens.access_token, tokens.refresh_token);
-      return tokens.access_token;
+    }).then(({accessToken, refreshToken, expiresIn}) => {
+      this.tokenManager.persistTokens({accessToken, refreshToken, expiresIn});
+      return accessToken;
     });
   }
 };

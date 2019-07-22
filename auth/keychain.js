@@ -15,10 +15,10 @@ module.exports = class Keychain {
     return keytar.getPassword(this.service, 'refresh_token');
   }
 
-  setTokens(accessToken, refreshToken) {
-    keytar.setPassword(this.service, 'access_token', accessToken);
-    if (refreshToken) {
-      keytar.setPassword(this.service, 'refresh_token', refreshToken);
-    }
+  saveTokens(accessToken, refreshToken) {
+    return Promise.all([
+      keytar.setPassword(this.service, 'access_token', accessToken),
+      keytar.setPassword(this.service, 'refresh_token', refreshToken),
+    ]);
   }
 };

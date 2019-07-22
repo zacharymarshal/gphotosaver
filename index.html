@@ -24,7 +24,7 @@
 
     const el = document.querySelector('.google-sign-in');
     el.addEventListener('click', e => {
-      auth.getToken()
+      auth.lookupAccessToken()
     });
     const searchEl = document.querySelector('.search');
     searchEl.addEventListener('click', e => {
@@ -41,7 +41,7 @@
       const params = {
         filters,
       };
-      auth.getToken().then(authToken => {
+      auth.lookupAccessToken().then(authToken => {
         apiSearch({
           log,
           authToken,

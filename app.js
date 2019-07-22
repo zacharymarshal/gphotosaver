@@ -5,6 +5,7 @@ const Auth = require('./auth');
 const Config = require('./config');
 const Keychain = require('./auth/keychain');
 const Log = require('./log');
+const TokenManager = require('./auth/tokenManager');
 
 module.exports = {
   get config() {
@@ -49,8 +50,11 @@ module.exports = {
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/photoslibrary.readonly',
       ],
-      keychain: new Keychain({
-        service: this.config.get('keychain.service'),
+      tokenManager: new TokenManager({
+        config: this.config,
+        keychain: new Keychain({
+          service: this.config.get('keychain.service'),
+        }),
       }),
     });
   }
