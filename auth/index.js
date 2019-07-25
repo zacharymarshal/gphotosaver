@@ -78,6 +78,7 @@ module.exports = class Auth {
         redirectUri: this.getRedirectUri(),
       });
     }).then(({accessToken, refreshToken, expiresIn}) => {
+      this.log.debug('auth - saving auth tokens...');
       this.tokenManager.persistTokens({accessToken, refreshToken, expiresIn});
       return accessToken;
     });
