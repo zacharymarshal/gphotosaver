@@ -61,7 +61,7 @@ module.exports = class Auth {
   fetchToken() {
     this.log.info('auth - start process to get oauth token...');
     this.log.info('auth - getting google auth code...');
-    popup({
+    return popup({
       loginUrl: this.getLoginUrl(),
       port: this.port,
       log: this.log,
