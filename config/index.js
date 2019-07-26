@@ -29,27 +29,23 @@ module.exports = class Config {
   }
 
   get(key, defaultValue) {
-    let keys = key.split('.');
-    return search(this.config, keys) || defaultValue;
+    return search(this.config, key) || defaultValue;
   }
 
   set(key, value) {
-    let keys = key.split('.');
-    set(this.config, keys, value);
+    set(this.config, key, value);
     writeConfigFile(this.file, this.config);
   }
 
   setBulk(items) {
     for (let key in items) {
-      let keys = key.split('.');
-      set(this.config, keys, items[key]);
+      set(this.config, key, items[key]);
     }
     writeConfigFile(this.file, this.config);
   }
 
   has(key) {
-    let keys = key.split('.');
-    return search(this.config, keys) !== undefined;
+    return search(this.config, key) !== undefined;
   }
 
   all() {
